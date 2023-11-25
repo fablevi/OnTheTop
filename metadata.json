@@ -1,0 +1,8 @@
+{
+  "name": "OnTheTop",
+  "description": "Always on top button in the top bar",
+  "uuid": "OnTheTop@fablevi.github.io",
+  "shell-version": [
+    "45"
+  ]
+}
