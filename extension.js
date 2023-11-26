@@ -1,9 +1,11 @@
 
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
+import Meta from 'gi://Meta';
+import Clutter from 'gi://Clutter';
 
 /*let panelButton;
 
@@ -41,20 +43,29 @@ export default class ExampleExtension extends Extension {
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
 
-        const aboveIcon  = new St.Icon({
+        //onthetop
+        this._aboveIcon = new St.Icon({
             icon_name: 'go-top-symbolic',
             style_class: 'system-status-icon',
         })
-        
-        const belowIcon  = new St.Icon({
+
+        //onunder
+        this._belowIcon = new St.Icon({
             icon_name: 'go-bottom-symbolic',
             style_class: 'system-status-icon',
         })
 
-        this._indicator.add_child(belowIcon);
+        global.display.focus_window ? this._indicator.add_child(this._belowIcon) : null
 
         //Window is focused
         Shell.WindowTracker.get_default().connectObject('notify::focus-app',
+            this._focusAppChanged.bind(this), this);
+
+        /*
+        Shell.WindowTracker.get_default().connectObject('notify::is-above',
+        this._tester.bind(this), this);*/
+
+        global.window_manager.connectObject('switch-workspace',
             this._focusAppChanged.bind(this), this);
 
         // Add the indicator to the panel
@@ -66,8 +77,37 @@ export default class ExampleExtension extends Extension {
         this._indicator = null;
     }
 
-    _focusAppChanged(){
+    _focusAppChanged() {
         console.log('TEST.................................................................')
+        //change icons
+        if (global.display.focus_window) {
+            if (global.display.focus_window.is_above()) {
+                this._indicator.remove_child(this._belowIcon)
+                this._indicator.add_child(this._aboveIcon)
+            } else {
+                this._indicator.remove_child(this._aboveIcon)
+                this._indicator.add_child(this._belowIcon)
+            }
+        } else {
+            this._indicator.remove_child(this._belowIcon)
+            this._indicator.remove_child(this._aboveIcon)
+        }
+    }
+
+    _onAppStateChanged() {
+        console.log('TEST STATECHANGED.................................................................')
+    }
+
+    _tester(actor, event) {
+        console.log("TEST: ontop")
+    }
+
+    _removeFunction() {
+
+    }
+
+    _addFunction() {
+
     }
 }
 
