@@ -7,39 +7,14 @@ import Shell from 'gi://Shell';
 import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
 
-/*let panelButton;
-
-    let aboveIcon  = new St.Icon({
-        icon_name: 'go-top-symbolic',
-        style_class: 'system-status-icon',
-    })
-    
-    let belowIcon  = new St.Icon({
-        icon_name: 'go-bottom-symbolic',
-        style_class: 'system-status-icon',
-    })
-
-export default class ExampleExtension extends Extension{
-    
-    enable() {
-        Main.panel._leftBox.insert_child_at_index(panelButton,1)
-    }
-    
-    disable() {
-        Main.panel._leftBox.remove_child_at_index(panelButton,1)
-    }
-    
-    init() {
-        panelButton = new St.Bin({
-            style_class:'panel-button'
-        })
-    
-        panelButton.set_child(belowIcon)
-    }
-}*/
-
 export default class ExampleExtension extends Extension {
     enable() {
+
+        //above funkcio id-ja
+        this._handlerId = 0;
+
+        this._oldGlobalDisplayFocusWindow = null;
+
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
 
@@ -55,15 +30,14 @@ export default class ExampleExtension extends Extension {
             style_class: 'system-status-icon',
         })
 
-        global.display.focus_window ? this._indicator.add_child(this._belowIcon) : null
+        if (global.display.focus_window) {
+            this._indicator.add_child(this._belowIcon)
+            this._newFocusedWindow()
+        }
 
         //Window is focused
         Shell.WindowTracker.get_default().connectObject('notify::focus-app',
             this._focusAppChanged.bind(this), this);
-
-        /*
-        Shell.WindowTracker.get_default().connectObject('notify::is-above',
-        this._tester.bind(this), this);*/
 
         global.window_manager.connectObject('switch-workspace',
             this._focusAppChanged.bind(this), this);
@@ -78,35 +52,55 @@ export default class ExampleExtension extends Extension {
     }
 
     _focusAppChanged() {
-        console.log('TEST.................................................................')
-        //change icons
-        if (global.display.focus_window) {
-            if (global.display.focus_window.is_above()) {
-                this._indicator.remove_child(this._belowIcon)
-                this._indicator.add_child(this._aboveIcon)
-            } else {
-                this._indicator.remove_child(this._aboveIcon)
-                this._indicator.add_child(this._belowIcon)
-            }
-        } else {
-            this._indicator.remove_child(this._belowIcon)
-            this._indicator.remove_child(this._aboveIcon)
-        }
-    }
-
-    _onAppStateChanged() {
-        console.log('TEST STATECHANGED.................................................................')
+        console.log('_focusAppChanged.................................................................')
+        this._isWindowChange_Handler()
+        this._changeIcon()
     }
 
     _tester(actor, event) {
         console.log("TEST: ontop")
     }
 
-    _removeFunction() {
-
+    _isAboveFunction() {
+        console.log("TEST: asd")
+        this._changeIcon()
     }
 
-    _addFunction() {
+    _isWindowChange_Handler() {
+        if (this._oldGlobalDisplayFocusWindow) {
+            this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId)
+        }
+        this._newFocusedWindow()
+    }
+
+    _newFocusedWindow() {
+        this._oldGlobalDisplayFocusWindow = global.display.focus_window?global.display.focus_window:null;
+        this._handlerId = global.display.focus_window?global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)):0;
+        console.log("global.display.focus_window newFocusedWindow", global.display.focus_window)
+        console.log("this:handlerId: ", this._handlerId)
+    }
+
+    _changeIcon() {
+        //change icons
+        console.log("global.display.focus_window, changed icon: ", global.display.focus_window)
+        try {
+            if (global.display.focus_window) {
+                if (global.display.focus_window.is_above()) {
+                    this._indicator.remove_child(this._belowIcon)
+                    this._indicator.add_child(this._aboveIcon)
+                } else {
+                    this._indicator.remove_child(this._aboveIcon)
+                    this._indicator.add_child(this._belowIcon)
+                }
+            }
+            console.log("global.display.focus_window: ", global.display.focus_window.is_above())
+        }
+        catch {
+            console.log("CATCHEDDDDDDDDDDDDDDDDDDDD")
+            this._indicator.remove_child(this._belowIcon)
+            this._indicator.remove_child(this._aboveIcon)
+        }
+
 
     }
 }
