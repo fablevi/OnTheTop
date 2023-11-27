@@ -10,6 +10,8 @@ import Clutter from 'gi://Clutter';
 export default class ExampleExtension extends Extension {
     enable() {
 
+        //this._label = new St.Label({ text: "My Text" });
+
         //above funkcio id-ja
         this._handlerId = 0;
 
@@ -18,23 +20,31 @@ export default class ExampleExtension extends Extension {
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
 
+        //this._indicator.add_child(this._label)
+
+        //icon size
+        this._iconSize = 24;
+
         //onthetop
         this._aboveIcon = new St.Icon({
             icon_name: 'go-top-symbolic',
             style_class: 'system-status-icon',
+            icon_size : this._iconSize
         })
 
         //onunder
         this._belowIcon = new St.Icon({
             icon_name: 'go-bottom-symbolic',
             style_class: 'system-status-icon',
+            icon_size : this._iconSize
         })
 
         if (global.display.focus_window) {
             this._indicator.visible = true
             this._indicator.add_child(this._belowIcon)
+            //this._indicator.actor.add_child(this._belowIcon)
             this._newFocusedWindow()
-        }else{
+        } else {
             this._indicator.visible = false
         }
 
@@ -74,8 +84,8 @@ export default class ExampleExtension extends Extension {
     }
 
     _newFocusedWindow() {
-        this._oldGlobalDisplayFocusWindow = global.display.focus_window?global.display.focus_window:null;
-        this._handlerId = global.display.focus_window?global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)):0;
+        this._oldGlobalDisplayFocusWindow = global.display.focus_window ? global.display.focus_window : null;
+        this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)) : 0;
         console.log("global.display.focus_window newFocusedWindow", global.display.focus_window)
         console.log("this:handlerId: ", this._handlerId)
     }
@@ -89,9 +99,14 @@ export default class ExampleExtension extends Extension {
                 if (global.display.focus_window.is_above()) {
                     this._indicator.remove_child(this._belowIcon)
                     this._indicator.add_child(this._aboveIcon)
+                    //this._indicator.remove_child(this._label)
+                    //this._indicator.actor.remove_child(this._belowIcon)
+                    //this._indicator.actor.add_child(this._aboveIcon)
                 } else {
                     this._indicator.remove_child(this._aboveIcon)
                     this._indicator.add_child(this._belowIcon)
+                    //this._indicator.actor.remove_child(this._aboveIcon)
+                    //this._indicator.actor.add_child(this._belowIcon)
                 }
             }
             console.log("global.display.focus_window: ", global.display.focus_window.is_above())
