@@ -31,8 +31,11 @@ export default class ExampleExtension extends Extension {
         })
 
         if (global.display.focus_window) {
+            this._indicator.visible = true
             this._indicator.add_child(this._belowIcon)
             this._newFocusedWindow()
+        }else{
+            this._indicator.visible = false
         }
 
         //Window is focused
@@ -43,7 +46,8 @@ export default class ExampleExtension extends Extension {
             this._focusAppChanged.bind(this), this);
 
         // Add the indicator to the panel
-        Main.panel.addToStatusArea(this.uuid, this._indicator);
+        Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
+        //Main.panel._leftBox.insert_child_at_index(this._indicator, 1)
     }
 
     disable() {
@@ -57,12 +61,8 @@ export default class ExampleExtension extends Extension {
         this._changeIcon()
     }
 
-    _tester(actor, event) {
-        console.log("TEST: ontop")
-    }
-
     _isAboveFunction() {
-        console.log("TEST: asd")
+        console.log("TEST: _isAbove()")
         this._changeIcon()
     }
 
@@ -85,6 +85,7 @@ export default class ExampleExtension extends Extension {
         console.log("global.display.focus_window, changed icon: ", global.display.focus_window)
         try {
             if (global.display.focus_window) {
+                this._indicator.visible = true
                 if (global.display.focus_window.is_above()) {
                     this._indicator.remove_child(this._belowIcon)
                     this._indicator.add_child(this._aboveIcon)
@@ -97,11 +98,8 @@ export default class ExampleExtension extends Extension {
         }
         catch {
             console.log("CATCHEDDDDDDDDDDDDDDDDDDDD")
-            this._indicator.remove_child(this._belowIcon)
-            this._indicator.remove_child(this._aboveIcon)
+            this._indicator.visible = false
         }
-
-
     }
 }
 
