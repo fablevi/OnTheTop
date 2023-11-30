@@ -133,7 +133,7 @@ export default class ExampleExtension extends Extension {
     }
 
     _buttonClicked(){
-        console.log('KLIKK')
+        global.display.focus_window.is_above()?global.display.focus_window.unmake_above():global.display.focus_window.make_above();
     }
 }
 
