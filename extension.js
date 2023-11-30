@@ -17,9 +17,6 @@ export default class ExampleExtension extends Extension {
 
     enable() {
 
-        //test
-        //this._label = new St.Label({ text: "My Text" });
-
         //above funkcio id-ja
         this._handlerId = 0;
 
@@ -29,8 +26,6 @@ export default class ExampleExtension extends Extension {
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event',this._buttonClicked.bind(this))
 
-        //this._indicator.add_child(this._label)
-
         //icon size
         this._iconSize = 20;
 
@@ -38,7 +33,6 @@ export default class ExampleExtension extends Extension {
         const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/Above.svg`)
 
         this._aboveIcon = new St.Icon({
-            //icon_name: 'go-top-symbolic',
             gicon: aboveAdwaitaIcon,
             style_class: 'system-status-icon',
             icon_size : this._iconSize
@@ -48,7 +42,6 @@ export default class ExampleExtension extends Extension {
 
         //onunder
         this._belowIcon = new St.Icon({
-            //icon_name: 'go-bottom-symbolic',
             gicon: underAdwaitaIcon,
             style_class: 'system-status-icon',
             icon_size : this._iconSize
@@ -57,7 +50,6 @@ export default class ExampleExtension extends Extension {
         if (global.display.focus_window) {
             this._indicator.visible = true
             this._indicator.add_child(this._belowIcon)
-            //this._indicator.actor.add_child(this._belowIcon)
             this._newFocusedWindow()
         } else {
             this._indicator.visible = false
@@ -72,7 +64,6 @@ export default class ExampleExtension extends Extension {
 
         // Add the indicator to the panel
         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
-        //Main.panel._leftBox.insert_child_at_index(this._indicator, 1)
     }
 
     disable() {
@@ -114,20 +105,14 @@ export default class ExampleExtension extends Extension {
                 if (global.display.focus_window.is_above()) {
                     this._indicator.remove_child(this._belowIcon)
                     this._indicator.add_child(this._aboveIcon)
-                    //this._indicator.remove_child(this._label)
-                    //this._indicator.actor.remove_child(this._belowIcon)
-                    //this._indicator.actor.add_child(this._aboveIcon)
                 } else {
                     this._indicator.remove_child(this._aboveIcon)
                     this._indicator.add_child(this._belowIcon)
-                    //this._indicator.actor.remove_child(this._aboveIcon)
-                    //this._indicator.actor.add_child(this._belowIcon)
                 }
             }
             console.log("global.display.focus_window: ", global.display.focus_window.is_above())
         }
         catch {
-            //console.log("CATCHEDDDDDDDDDDDDDDDDDDDD")
             this._indicator.visible = false
         }
     }
