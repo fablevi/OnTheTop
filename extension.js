@@ -10,6 +10,7 @@ import Clutter from 'gi://Clutter';
 export default class ExampleExtension extends Extension {
     enable() {
 
+        //test
         //this._label = new St.Label({ text: "My Text" });
 
         //above funkcio id-ja
