@@ -3,8 +3,6 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
-import Meta from 'gi://Meta';
-import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio'
 
 
