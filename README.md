@@ -1,4 +1,4 @@
 # OnTheTop
-This is a GNOME DE extension. This extension is for those applications which does not have 'on the top' function when you click on the title bar
+OnTheTop is a GNOME extension that aims to allow applications that don't have the 'Always On Top' feature in their default menus to stay on top of the other windows
 
 Works with GNOME: 45!
