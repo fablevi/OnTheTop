@@ -72,13 +72,11 @@ export default class ExampleExtension extends Extension {
     }
 
     _focusAppChanged() {
-        console.log('_focusAppChanged.................................................................')
         this._isWindowChange_Handler()
         this._changeIcon()
     }
 
     _isAboveFunction() {
-        console.log("TEST: _isAbove()")
         this._changeIcon()
     }
 
@@ -92,13 +90,10 @@ export default class ExampleExtension extends Extension {
     _newFocusedWindow() {
         this._oldGlobalDisplayFocusWindow = global.display.focus_window ? global.display.focus_window : null;
         this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)) : 0;
-        console.log("global.display.focus_window newFocusedWindow", global.display.focus_window)
-        console.log("this:handlerId: ", this._handlerId)
     }
 
     _changeIcon() {
         //change icons
-        console.log("global.display.focus_window, changed icon: ", global.display.focus_window)
         try {
             if (global.display.focus_window) {
                 this._indicator.visible = true
@@ -110,7 +105,6 @@ export default class ExampleExtension extends Extension {
                     this._indicator.add_child(this._belowIcon)
                 }
             }
-            console.log("global.display.focus_window: ", global.display.focus_window.is_above())
         }
         catch {
             this._indicator.visible = false
