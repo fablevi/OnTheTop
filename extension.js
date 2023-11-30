@@ -1,4 +1,3 @@
-
 import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
@@ -6,8 +5,16 @@ import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Meta from 'gi://Meta';
 import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio'
+
 
 export default class ExampleExtension extends Extension {
+    constructor(ext){
+        super(ext)
+        this._ext = ext
+        this._extPath = ext.path
+    }
+
     enable() {
 
         //test
@@ -20,22 +27,29 @@ export default class ExampleExtension extends Extension {
 
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
+        this._indicator.connect('button-press-event',this._buttonClicked.bind(this))
 
         //this._indicator.add_child(this._label)
 
         //icon size
-        this._iconSize = 24;
+        this._iconSize = 20;
 
         //onthetop
+        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/Above.svg`)
+
         this._aboveIcon = new St.Icon({
-            icon_name: 'go-top-symbolic',
+            //icon_name: 'go-top-symbolic',
+            gicon: aboveAdwaitaIcon,
             style_class: 'system-status-icon',
             icon_size : this._iconSize
         })
 
+        const underAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/Under.svg`)
+
         //onunder
         this._belowIcon = new St.Icon({
-            icon_name: 'go-bottom-symbolic',
+            //icon_name: 'go-bottom-symbolic',
+            gicon: underAdwaitaIcon,
             style_class: 'system-status-icon',
             icon_size : this._iconSize
         })
@@ -113,9 +127,13 @@ export default class ExampleExtension extends Extension {
             console.log("global.display.focus_window: ", global.display.focus_window.is_above())
         }
         catch {
-            console.log("CATCHEDDDDDDDDDDDDDDDDDDDD")
+            //console.log("CATCHEDDDDDDDDDDDDDDDDDDDD")
             this._indicator.visible = false
         }
+    }
+
+    _buttonClicked(){
+        console.log('KLIKK')
     }
 }
 
