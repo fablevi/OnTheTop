@@ -70,6 +70,7 @@ export default class ExampleExtension extends Extension {
     }
 
     _focusAppChanged() {
+        console.log("change")
         this._isWindowChange_Handler()
         this._changeIcon()
     }
@@ -102,6 +103,8 @@ export default class ExampleExtension extends Extension {
                     this._indicator.remove_child(this._aboveIcon)
                     this._indicator.add_child(this._belowIcon)
                 }
+            }else{
+                this._indicator.visible = false
             }
         }
         catch {
