@@ -19,13 +19,14 @@ If the link is not available you can add it to the Shell:
 3. Rename the name of the unzipped folder to: 
     
         OnTheTop@fablevi.github.io
+
 4. Copy the unzipped, renamed folder here, with this code: 
 
         cp -r  Downloads/OnTheTop@fablevi.github.io .local/share/gnome-shell/extensions/
 
 5. Restart the OS: 
 
-    systemctl reboot
+        systemctl reboot
 
 > **Warning**
 > Tested with Ubuntu 23.10 x86_64 
