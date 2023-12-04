@@ -9,11 +9,9 @@ import Gio from 'gi://Gio'
 export default class ExampleExtension extends Extension {
     constructor(ext) {
         super(ext)
-        this._extPath = ext.path // i cant null it, because if the extension is disabled then enabled the path will null
     }
 
     enable() {
-
         //above funkcio id-ja
         this._handlerId = 0;
 
@@ -30,7 +28,7 @@ export default class ExampleExtension extends Extension {
         this._iconSize = 20;
 
         //onthetop
-        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Above.svg`)
+        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Above.svg`)
 
         this._aboveIcon = new St.Icon({
             gicon: aboveAdwaitaIcon,
@@ -38,7 +36,7 @@ export default class ExampleExtension extends Extension {
             icon_size: this._iconSize
         })
 
-        const underAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Under.svg`)
+        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Under.svg`)
 
         //onunder
         this._belowIcon = new St.Icon({
@@ -75,8 +73,6 @@ export default class ExampleExtension extends Extension {
 
         this._belowIcon?.destroy()
         this._belowIcon = null
-
-        //this._extPath = null // i cant null it, because if the extension is disabled then enabled the path will null
 
         global.window_manager.disconnectObject(this)//this._switchWorkspaceHandleId
         Shell.WindowTracker.get_default().disconnectObject(this)//this._focusAppHandlerId
@@ -167,7 +163,7 @@ export default class ExampleExtension extends Extension {
 
     _new_iconSet() {
         //onthetop
-        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Above.svg`)
+        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Above.svg`)
 
         this._aboveIcon = new St.Icon({
             gicon: aboveAdwaitaIcon,
@@ -175,7 +171,7 @@ export default class ExampleExtension extends Extension {
             icon_size: this._iconSize
         })
 
-        const underAdwaitaIcon = Gio.icon_new_for_string(`${this._extPath}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Under.svg`)
+        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/${this._gnome_theme ? 'Light' : 'Dark'}/Under.svg`)
 
         //onunder
         this._belowIcon = new St.Icon({
