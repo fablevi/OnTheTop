@@ -9,8 +9,7 @@ import Gio from 'gi://Gio'
 export default class ExampleExtension extends Extension {
     constructor(ext) {
         super(ext)
-        this._ext = ext
-        this._extPath = ext.path
+        this._extPath = ext.path // i cant null it, because if the extension is disabled then enabled the path will null
     }
 
     enable() {
@@ -50,7 +49,7 @@ export default class ExampleExtension extends Extension {
 
         if (global.display.focus_window) {
             this._indicator.visible = true
-            this._indicator.add_child(this._belowIcon)
+            this._indicator.add_child(global.display.focus_window.is_above()?this._aboveIcon:this._belowIcon)
             this._newFocusedWindow()
         } else {
             this._indicator.visible = false
@@ -77,10 +76,10 @@ export default class ExampleExtension extends Extension {
         this._belowIcon?.destroy()
         this._belowIcon = null
 
-        this._ext = null
+        //this._extPath = null // i cant null it, because if the extension is disabled then enabled the path will null
 
-        global.window_manager.disconnectObject(this._switchWorkspaceHandleId)
-        Shell.WindowTracker.get_default().disconnectObject(this._focusAppHandlerId)
+        global.window_manager.disconnectObject(this)//this._switchWorkspaceHandleId
+        Shell.WindowTracker.get_default().disconnectObject(this)//this._focusAppHandlerId
         this._settings.disconnect(this._settingsHandleId)
 
         this._indicator?.destroy();
@@ -190,8 +189,8 @@ export default class ExampleExtension extends Extension {
         const settings = new Gio.Settings({ schema: 'org.gnome.desktop.interface' })
 
         //this is now is off, because the real light theme is not avalable on GNOME 45 (the light top bar theme, if it comes i will change back the default return)
-        //return settings.get_string('gtk-theme').toLowerCase().includes('dark');
-        return true;
+        return settings.get_string('gtk-theme').toLowerCase().includes('dark');
+        //return true;
     }
 }
 
