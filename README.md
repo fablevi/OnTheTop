@@ -4,8 +4,7 @@ OnTheTop is a GNOME extension that aims to allow applications that don't have th
 ## Solution 1
 To add the extension to the GNOME Shell, you can do so at this link: 
 
-    `not available right now`
-
+    https://extensions.gnome.org/extension/6571/on-the-top/
 
 ## Solution 2
 
