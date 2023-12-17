@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16" version="1.1" >
+<g transform="translate(1.385149 0.991318)"><rect width="11.719834" height="12.568625" rx="1" ry="1" transform="translate(2.895016 2.440057)" fill="#454545" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="5.86" ry="5.86" transform="matrix(.153206 0 0 0.148062 2.895016 2.472572)" fill="#686868" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="0" ry="0" transform="matrix(.846794 0 0 0.148062 3.79279 2.472572)" fill="#686868" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="5.86" ry="5.86" transform="matrix(.153206 0 0 0.148062 12.819302 2.472572)" fill="#686868" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="0" ry="0" transform="matrix(1 0 0 0.08356 2.895016 3.283274)" fill="#686868" stroke-width="0"/></g>
+<g transform="translate(-2.895017-2.472572)"><rect width="11.719834" height="12.568625" rx="1" ry="1" transform="matrix(1 0 0 0.994826 2.895016 2.472572)" fill="#a2a3a2" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="5.86" ry="5.86" transform="matrix(.153206 0 0 0.148062 2.895016 2.472572)" fill="#cccdcc" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="5.86" ry="5.86" transform="matrix(.153206 0 0 0.148062 12.819302 2.472572)" fill="#cccdcc" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="0" ry="0" transform="matrix(.846794 0 0 0.148062 3.79279 2.472572)" fill="#cccdcc" stroke-width="0"/>
+<rect width="11.719834" height="12.568625" rx="0" ry="0" transform="matrix(1 0 0 0.08356 2.895016 3.283274)" fill="#cccdcc" stroke-width="0"/></g></svg>
