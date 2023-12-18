@@ -21,7 +21,7 @@ export default class ExampleExtension extends Extension {
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
         //icon size
-        this._iconSize = 20;
+        this._iconSize = 16;
 
         const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/above-symbolic.svg`);
         this._aboveIcon = this._createIcon(aboveAdwaitaIcon);
