@@ -16,12 +16,14 @@ export default class ExampleExtension extends Extension {
     }
 
     enable() {
+        // Create the PanelMenu button and icons for above and below states for the extension
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
         this._aboveIcon = this._createIcon(`${this.path}/icons/Above-symbolic.svg`);
         this._belowIcon = this._createIcon(`${this.path}/icons/Under-symbolic.svg`);
 
+        // Initialize and update icons and connect event handlers for focus changes
         this._initializeIcons();
         this._updateIconPosition();
 
@@ -31,10 +33,12 @@ export default class ExampleExtension extends Extension {
         this._switchWorkspaceHandleId = global.window_manager.connectObject('switch-workspace',
             this._focusAppChanged.bind(this), this);
 
+        // Add the extension to the status area
         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
     }
 
     disable() {
+        // Destroy icons and the PanelMenu button and disconnect event handlers
         this._aboveIcon?.destroy();
         this._belowIcon?.destroy();
 
@@ -44,15 +48,18 @@ export default class ExampleExtension extends Extension {
         this._indicator?.destroy();
     }
 
+    // Event handler for focus app changes
     _focusAppChanged() {
         this._isWindowChange_Handler();
         this._changeIcon();
     }
 
+    // Check if the window is above and update the icon
     _isAboveFunction() {
         this._changeIcon();
     }
 
+    // Handle changes in the focused window
     _isWindowChange_Handler() {
         if (this._oldGlobalDisplayFocusWindow) {
             this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
@@ -60,24 +67,29 @@ export default class ExampleExtension extends Extension {
         this._newFocusedWindow();
     }
 
+    // Get the newly focused window and connect to its 'above' property
     _newFocusedWindow() {
         this._oldGlobalDisplayFocusWindow = global.display.focus_window ? global.display.focus_window : null;
         this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)) : 0;
     }
 
+    // Change the icon based on the above state
     _changeIcon() {
         this._updateIconPosition();
     }
 
+    // Handle button click event to toggle 'above' state
     _buttonClicked() {
         global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
     }
 
+    // Initialize icons and make the extension invisible
     _initializeIcons() {
         this._indicator.add_child(this._aboveIcon);
         this._indicator.visible = false;
     }
 
+    // Create a St.Icon instance based on the provided GIcon path
     _createIcon(giconPath) {
         const icon = Gio.icon_new_for_string(giconPath);
         return new St.Icon({
@@ -87,6 +99,7 @@ export default class ExampleExtension extends Extension {
         });
     }
 
+    // Update the position of the icon based on the 'above' state
     _updateIconPosition() {
         try {
             if (global.display.focus_window) {
