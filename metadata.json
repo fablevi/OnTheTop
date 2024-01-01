@@ -2,6 +2,7 @@
   "name": "On The Top",
   "description": "Always on top button in the top bar",
   "uuid": "OnTheTop@fablevi.github.io",
+  "settings-schema": "org.gnome.shell.extensions.on-the-top",
   "shell-version": [
     "45"
   ],

@@ -1,9 +1,11 @@
-import { Extension } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
+
+import Gtk from 'gi://Gtk'
 
 export default class OnTheTop extends Extension {
     constructor(ext) {
@@ -53,7 +55,6 @@ export default class OnTheTop extends Extension {
         this._indicator?.destroy();
         this._indicator = null;
 
-        this._settingsJSON?.destroy()
         this._settingsJSON = null;
     }
 
