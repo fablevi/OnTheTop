@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.on-the-top" path="/org/gnome/shell/extensions/on-the-top/">
+    <key name="positions" type="s">
+      <choices>
+        <choice value="right"/>
+        <choice value="left"/>
+      </choices> 
+      <default>'right'</default>
+      <summary>Position settings</summary>
+      <description>This specifies where is the icon will be shown.</description>
+      </key>
+  </schema>
+</schemalist>
