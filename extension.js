@@ -5,7 +5,6 @@ import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
 
-
 export default class OnTheTop extends Extension {
     constructor(ext) {
         super(ext);
@@ -36,7 +35,8 @@ export default class OnTheTop extends Extension {
         global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
 
         // Add the indicator to the panel
-        Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
+        this._settingsJSON = this._importJSONFile()
+        Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);
     }
 
     disable() {
@@ -52,6 +52,63 @@ export default class OnTheTop extends Extension {
 
         this._indicator?.destroy();
         this._indicator = null;
+
+        this._settingsJSON?.destroy()
+        this._settingsJSON = null;
+    }
+
+    _importJSONFile() {
+        let settingsJSONpath = `${this.path}/settings.json`
+        try {
+            let file = Gio.File.new_for_path(settingsJSONpath);
+            let [success, content] = file.load_contents(null);
+
+            if (success) {
+                let json = JSON.parse(content);
+                log('JSON tartalom:', json.position);
+                return json;
+            } else {
+                log('Nem sikerült beolvasni a JSON fájlt.');
+                return null;
+            }
+        } catch (error) {
+            log('Hiba történt:', error.message);
+            return null;
+        }
+    }
+
+    //not used right now
+    _updateJSONFile(newPosition) {
+        let settingsJSONpath = `${this.path}/settings.json`
+        try {
+            let file = Gio.File.new_for_path(settingsJSONpath);
+            let [success, content] = file.load_contents(null);
+
+            if (success) {
+                let json = JSON.parse(content);
+
+                // Frissítsd a "position" kulcs értékét az új pozícióval
+                json.position = newPosition;
+
+                // JSON objektumot szöveggé alakítsuk
+                let updatedContent = JSON.stringify(json, null, 4);
+
+                // A fájl tartalmának frissítése
+                file.replace_contents(
+                    updatedContent,
+                    null,
+                    false,
+                    Gio.FileCreateFlags.REPLACE_DESTINATION,
+                    null
+                );
+
+                log('JSON fájl sikeresen frissítve.');
+            } else {
+                log('Nem sikerült beolvasni a JSON fájlt.');
+            }
+        } catch (error) {
+            log('Hiba történt:', error.message);
+        }
     }
 
     _focusAppChanged() {
