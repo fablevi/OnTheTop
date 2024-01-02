@@ -5,8 +5,6 @@ import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
 
-import Gtk from 'gi://Gtk'
-
 export default class OnTheTop extends Extension {
     constructor(ext) {
         super(ext);
@@ -20,10 +18,21 @@ export default class OnTheTop extends Extension {
         this._handlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
 
-        // Create a panel button
-        this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
-        this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
+        this._indicator = null;
 
+        this._aboveIcon = null;
+        this._belowIcon = null;
+
+        this._createButton()
+
+        //Opened window listeners
+        Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
+        global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
+
+        console.log(Main.panel._leftBox.get_children())
+    }
+
+    _createButton() {
         //icon size
         this._iconSize = 16;
 
@@ -33,15 +42,15 @@ export default class OnTheTop extends Extension {
         const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-symbolic.svg`);
         this._belowIcon = this._createIcon(underAdwaitaIcon);
 
+        // Create a panel button
+        this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
+        this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
+
         this._firstIconUpdate();
 
-        //Opened window listeners
-        Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
-        global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
-
-        // Add the indicator to the panel
-        this._settingsJSON = this._importJSONFile()
-        this._oldIndicator = Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);
+         // Add the indicator to the panel
+         this._settingsJSON = this._importJSONFile();
+         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);
     }
 
     disable() {
@@ -181,26 +190,22 @@ export default class OnTheTop extends Extension {
     }
 
     _changePosition() {
-        console.log('Valtozott ext!!')
-        this._updateJSONFile(this.settings.get_string('positions'))
-        this._changeIconPosition()
+        this._updateJSONFile(this.settings.get_string('positions'));
+        this._changeIconPosition();
     }
 
 
     _changeIconPosition() {
-        //Main.panel.remove
-       /* if("right"==this.settings.get_string('positions')){
-            Main.panel._rightBox.remove_child(Main.panel.statusArea['OnTheTop@fablevi.github.io'])
-        }else if ("left"==this.settings.get_string('positions')){
-            Main.panel._leftBox.remove_child(Main.panel.statusArea['OnTheTop@fablevi.github.io'])
-        }else{
-            console.log('Something wrong')
-        }*/
-        //console.log(this._test)
-        //Main.panel.statusArea['OnTheTop@fablevi.github.io'].get_position()
-        /*this._oldIndicator.destroy()
-        this._settingsJSON = this._importJSONFile()
-        this._oldIndicator = Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);*/
+        this._aboveIcon?.destroy();
+        this._aboveIcon = null;
+
+        this._belowIcon?.destroy();
+        this._belowIcon = null;
+
+        this._indicator?.destroy();
+        this._indicator = null;
+
+        this._createButton();
     }
 }
 
