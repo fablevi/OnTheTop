@@ -28,8 +28,6 @@ export default class OnTheTop extends Extension {
         //Opened window listeners
         Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
         global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
-
-        console.log(Main.panel._leftBox.get_children())
     }
 
     _createButton() {
@@ -79,10 +77,8 @@ export default class OnTheTop extends Extension {
 
             if (success) {
                 let json = JSON.parse(content);
-                log('JSON tartalom:', json.position);
                 return json;
             } else {
-                log('Nem sikerült beolvasni a JSON fájlt.');
                 return null;
             }
         } catch (error) {
@@ -115,10 +111,7 @@ export default class OnTheTop extends Extension {
                     Gio.FileCreateFlags.REPLACE_DESTINATION,
                     null
                 );
-
-                log('JSON fájl sikeresen frissítve.');
             } else {
-                log('Nem sikerült beolvasni a JSON fájlt.');
             }
         } catch (error) {
             log('Hiba történt:', error.message);

@@ -32,8 +32,6 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
         const settings = this.getSettings();
 
-        settings.connect("changed::positions",this._changePosition.bind(this))
-
         // Create a preferences page, with a single group
         const page = new Adw.PreferencesPage({
             title: _('General'),
@@ -52,8 +50,8 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     _createDDMenu(settings) {
         const model = new Gio.ListStore({ item_type: KeyValuePair });
         model.splice(0, 0, [
-            new KeyValuePair({ key: "right", value: "right" }),
-            new KeyValuePair({ key: "left", value: "left" }),
+            new KeyValuePair({ key: "right", value: "Right" }),
+            new KeyValuePair({ key: "left", value: "Left" }),
         ]);
         const positionComboBox = new Adw.ComboRow({
             title: "Set position",
@@ -83,12 +81,7 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     _comboBoxChange(positionComboBox, settings){
         settings.set_string("positions",positionComboBox.selected_item.key)
         let positions = positionComboBox.selected_item.key;
-        console.log("positions: ",positions)
         
-    }
-
-    _changePosition(){
-        console.log('Valtozott!!')
     }
 
     _importJSONFile() {
@@ -99,14 +92,11 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
 
             if (success) {
                 let json = JSON.parse(content);
-                log('JSON tartalom:', json.position);
                 return json;
             } else {
-                log('Nem sikerült beolvasni a JSON fájlt.');
                 return null;
             }
         } catch (error) {
-            log('Hiba történt:', error.message);
             return null;
         }
     }
