@@ -15,6 +15,7 @@ export default class OnTheTop extends Extension {
     //ID's and listeners
     enable() {
         this.settings = this.getSettings();
+        this.settings.connect("changed::positions",this._changePosition.bind(this))
 
         this._handlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
@@ -40,7 +41,6 @@ export default class OnTheTop extends Extension {
 
         // Add the indicator to the panel
         this._settingsJSON = this._importJSONFile()
-        //this._settings.set_string("OnTheTopJSON", this._settingsJSON);
         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);       
     }
 
@@ -63,7 +63,7 @@ export default class OnTheTop extends Extension {
     }
 
     _importJSONFile() {
-        this.settings.connect("changed::OnTheTopJSON",this._changePosition.bind(this))
+        //this.settings.connect("changed::OnTheTopJSON",this._changePosition.bind(this))
         let settingsJSONpath = `${this.path}/settings.json`
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
@@ -183,6 +183,12 @@ export default class OnTheTop extends Extension {
 
     _changePosition(){
         console.log('Valtozott ext!!')
+        this._updateJSONFile(this.settings.get_string('positions'))
+    }
+
+
+    _changeIconPosition(){
+        
     }
 }
 

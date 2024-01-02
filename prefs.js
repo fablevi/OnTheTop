@@ -3,7 +3,6 @@ import Gio from 'gi://Gio';
 import Gtk from "gi://Gtk";
 import GObject from "gi://GObject";
 
-
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
 const KeyValuePair = GObject.registerClass(
@@ -27,15 +26,13 @@ const KeyValuePair = GObject.registerClass(
     },
     class KeyValuePair extends GObject.Object { },
 );
-const settings = this.getSettings();
-
 
 export default class OnTheTopPreferences extends ExtensionPreferences {
 
     fillPreferencesWindow(window) {
-        settings.set_string("OnTheTopJSON",this._importJSONFile())
+        const settings = this.getSettings();
 
-        settings.connect("changed::OnTheTopJSON",this._changePosition.bind(this))
+        settings.connect("changed::positions",this._changePosition.bind(this))
 
         // Create a preferences page, with a single group
         const page = new Adw.PreferencesPage({
@@ -48,11 +45,11 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
             title: _('Appearance'),
             description: _('Configure the appearance of the extension'),
         });
-        group.add(this._createDDMenu())
+        group.add(this._createDDMenu(settings))
         page.add(group);
     }
 
-    _createDDMenu() {
+    _createDDMenu(settings) {
         const model = new Gio.ListStore({ item_type: KeyValuePair });
         model.splice(0, 0, [
             new KeyValuePair({ key: "right", value: "Right" }),
@@ -65,19 +62,30 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
             expression: new Gtk.PropertyExpression(KeyValuePair, null, "value"),
         });
 
+        let json = this._importJSONFile();
+
+        for (let i = 0; i < model.n_items; i++) {
+            if (
+              model.get_item(i).key == json.position
+            ) {
+                positionComboBox.selected = i;
+              break;
+            }
+          }
+
         positionComboBox.connect("notify::selected-item",()=>{
-            this._comboBoxChange(positionComboBox)
+            this._comboBoxChange(positionComboBox, settings)
         })
 
         return positionComboBox
     }
     
-    _comboBoxChange(positionComboBox){
+    _comboBoxChange(positionComboBox, settings){
         console.log(positionComboBox.selected_item.key)
-
-        let json = settings.get_string("OnTheTopJSON")
-        json.position = positionComboBox.selected_item.key;
-        settings.set_string("OnTheTopJSON",json)
+        settings.set_string("positions",positionComboBox.selected_item.key)
+        let positions = positionComboBox.selected_item.key;
+        console.log("positions: ",positions)
+        
     }
 
     _changePosition(){

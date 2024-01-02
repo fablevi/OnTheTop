@@ -3,10 +3,10 @@
   <schema id="org.gnome.shell.extensions.on-the-top" path="/org/gnome/shell/extensions/on-the-top/">
     <key name="positions" type="s">
       <choices>
-        <choice value="right"/>
-        <choice value="left"/>
+        <choice value="Right"/>
+        <choice value="Left"/>
       </choices> 
-      <default>'right'</default>
+      <default>'Right'</default>
       <summary>Position settings</summary>
       <description>This specifies where is the icon will be shown.</description>
       </key>
