@@ -52,8 +52,8 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     _createDDMenu(settings) {
         const model = new Gio.ListStore({ item_type: KeyValuePair });
         model.splice(0, 0, [
-            new KeyValuePair({ key: "right", value: "Right" }),
-            new KeyValuePair({ key: "left", value: "Left" }),
+            new KeyValuePair({ key: "right", value: "right" }),
+            new KeyValuePair({ key: "left", value: "left" }),
         ]);
         const positionComboBox = new Adw.ComboRow({
             title: "Set position",
@@ -81,7 +81,6 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     }
     
     _comboBoxChange(positionComboBox, settings){
-        console.log(positionComboBox.selected_item.key)
         settings.set_string("positions",positionComboBox.selected_item.key)
         let positions = positionComboBox.selected_item.key;
         console.log("positions: ",positions)

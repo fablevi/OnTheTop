@@ -15,7 +15,7 @@ export default class OnTheTop extends Extension {
     //ID's and listeners
     enable() {
         this.settings = this.getSettings();
-        this.settings.connect("changed::positions",this._changePosition.bind(this))
+        this.settings.connect("changed::positions", this._changePosition.bind(this))
 
         this._handlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
@@ -41,7 +41,7 @@ export default class OnTheTop extends Extension {
 
         // Add the indicator to the panel
         this._settingsJSON = this._importJSONFile()
-        Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);       
+        this._oldIndicator = Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);
     }
 
     disable() {
@@ -63,7 +63,6 @@ export default class OnTheTop extends Extension {
     }
 
     _importJSONFile() {
-        //this.settings.connect("changed::OnTheTopJSON",this._changePosition.bind(this))
         let settingsJSONpath = `${this.path}/settings.json`
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
@@ -181,14 +180,27 @@ export default class OnTheTop extends Extension {
         });
     }
 
-    _changePosition(){
+    _changePosition() {
         console.log('Valtozott ext!!')
         this._updateJSONFile(this.settings.get_string('positions'))
+        this._changeIconPosition()
     }
 
 
-    _changeIconPosition(){
-        
+    _changeIconPosition() {
+        //Main.panel.remove
+       /* if("right"==this.settings.get_string('positions')){
+            Main.panel._rightBox.remove_child(Main.panel.statusArea['OnTheTop@fablevi.github.io'])
+        }else if ("left"==this.settings.get_string('positions')){
+            Main.panel._leftBox.remove_child(Main.panel.statusArea['OnTheTop@fablevi.github.io'])
+        }else{
+            console.log('Something wrong')
+        }*/
+        //console.log(this._test)
+        //Main.panel.statusArea['OnTheTop@fablevi.github.io'].get_position()
+        /*this._oldIndicator.destroy()
+        this._settingsJSON = this._importJSONFile()
+        this._oldIndicator = Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);*/
     }
 }
 
