@@ -6,5 +6,7 @@
   "shell-version": [
     "45"
   ],
-  "url":"https://github.com/fablevi/OnTheTop-fablevi.github.io"
+  "url":"https://github.com/fablevi/OnTheTop-fablevi.github.io",
+  "extension-id": "show-Dbutton",
+  "gettext-domain": "show-Dbutton"
 }
