@@ -94,7 +94,6 @@ export default class OnTheTopPreferencess{
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
             let [success, content] = file.load_contents(null);
-
             if (success) {
                 let json = JSON.parse(content);
                 return json;

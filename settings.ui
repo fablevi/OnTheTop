@@ -15,8 +15,8 @@
             <property name="model">
               <object class="GtkStringList">
                 <items>
-                  <item>left</item>
-                  <item>right</item>
+                  <item>Left</item>
+                  <item>Right</item>
                 </items>
               </object>
             </property>
