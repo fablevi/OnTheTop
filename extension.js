@@ -14,6 +14,7 @@ export default class OnTheTop extends Extension {
     enable() {
         this.settings = this.getSettings();
         this.settings.connect("changed::positions", this._changePosition.bind(this))
+        this.settings.connect("changed::ranking", this._changePosition.bind(this))
 
         this._handlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
@@ -88,7 +89,7 @@ export default class OnTheTop extends Extension {
     }
 
     //not used right now
-    _updateJSONFile(newPosition) {
+    _updateJSONFile(newPosition, newRank) {
         let settingsJSONpath = `${this.path}/settings.json`
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
@@ -99,6 +100,7 @@ export default class OnTheTop extends Extension {
 
                 // Frissítsd a "position" kulcs értékét az új pozícióval
                 json.position = newPosition;
+                json.rank = newRank;
 
                 // JSON objektumot szöveggé alakítsuk
                 let updatedContent = JSON.stringify(json, null, 4);
@@ -183,7 +185,7 @@ export default class OnTheTop extends Extension {
     }
 
     _changePosition() {
-        this._updateJSONFile(this.settings.get_string('positions'));
+        this._updateJSONFile(this.settings.get_string('positions'),this.settings.get_string('ranking'));
         this._changeIconPosition();
     }
 

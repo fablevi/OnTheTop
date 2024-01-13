@@ -10,5 +10,22 @@
       <summary>Position settings</summary>
       <description>This specifies where is the icon will be shown.</description>
       </key>
+      <key name="ranking" type="s">
+      <choices>
+        <choice value="0"/>
+        <choice value="1"/>
+        <choice value="2"/>
+        <choice value="3"/>
+        <choice value="4"/>
+        <choice value="5"/>
+        <choice value="6"/>
+        <choice value="7"/>
+        <choice value="8"/>
+        <choice value="9"/>
+      </choices> 
+      <default>'2'</default>
+      <summary>Ranking settings</summary>
+      <description>This specifies where is the icon will be shown.</description>
+      </key>
   </schema>
 </schemalist>

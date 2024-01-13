@@ -12,11 +12,8 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
         builder.set_translation_domain(this.metadata['gettext-domain']);
         builder.add_from_file(this.dir.get_child('settings.ui').get_path());
 
-        //let panelPositions;
-        //let panelRanks;
-
         let comboRowPositions = builder.get_object('positions'); 
-        //let comboRowRanks = builder.get_object('ranking');
+        let comboRowRanks = builder.get_object('ranking');
 
         if(json.position == 'right'){
             comboRowPositions.set_selected(1);
@@ -24,8 +21,14 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
             comboRowPositions.set_selected(0);  
         }
 
+        comboRowRanks.set_selected(json.rank);
+
         comboRowPositions.connect("notify::selected-item",()=>{
-            this._comboBoxChange(comboRowPositions, settings)
+            this._comboRowPositionsChange(comboRowRanks, settings)
+        })
+
+        comboRowRanks.connect("notify::selected-item",()=>{
+            this._comboRowRanksChange(comboRowRanks, settings)
         })
 
         window.add(builder.get_object('settings_page'));
@@ -36,7 +39,6 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
             let [success, content] = file.load_contents(null);
-            console.log('success: ', content);
             if (success) {
                 let json = JSON.parse(content);
                 return json;
@@ -44,12 +46,13 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
                 return null;
             }
         } catch (error) {
+            console.log('error',error);
             return null;
         }
     }
 
-    _comboBoxChange(comboRowPositions, settings){
-        switch(comboRowPositions.get_selected()){
+    _comboRowPositionsChange(pos, settings){
+        switch(pos.get_selected()){
             case 0:
                 settings.set_string("positions","left");
                 break;
@@ -57,5 +60,9 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
                 settings.set_string("positions","right");
                 break;
         }
+    }
+
+    _comboRowRanksChange(rank, settings){
+        settings.set_string("ranking",rank.get_selected());
     }
 }
