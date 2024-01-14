@@ -24,7 +24,7 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
         comboRowRanks.set_selected(json.rank);
 
         comboRowPositions.connect("notify::selected-item",()=>{
-            this._comboRowPositionsChange(comboRowRanks, settings)
+            this._comboRowPositionsChange(comboRowPositions, settings)
         })
 
         comboRowRanks.connect("notify::selected-item",()=>{
@@ -52,17 +52,26 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
     }
 
     _comboRowPositionsChange(pos, settings){
-        switch(pos.get_selected()){
-            case 0:
-                settings.set_string("positions","left");
-                break;
-            case 1:
-                settings.set_string("positions","right");
-                break;
+        console.log('_comboRowPositionsChange',pos.selected)
+        try{
+            switch(pos.get_selected()){
+                case 0:
+                    settings.set_string("positions","left");
+                    break;
+                case 1:
+                    settings.set_string("positions","right");
+                    break;
+                default:
+                    console.log("nem mentek!!")
+                    break;
+            }
+        }catch(error){
+            console.log('error',error);
         }
+        
     }
 
     _comboRowRanksChange(rank, settings){
-        settings.set_string("ranking",rank.get_selected());
+        settings.set_string("ranking",rank.selected.toString());
     }
 }

@@ -49,7 +49,7 @@ export default class OnTheTop extends Extension {
 
          // Add the indicator to the panel
          this._settingsJSON = this._importJSONFile();
-         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, this._settingsJSON.position);
+         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank , this._settingsJSON.position);
     }
 
     disable() {
@@ -185,7 +185,9 @@ export default class OnTheTop extends Extension {
     }
 
     _changePosition() {
+        console.log('_changePosition')
         this._updateJSONFile(this.settings.get_string('positions'),this.settings.get_string('ranking'));
+        //this._updateJSONFile(this.settings.get_string('positions'),2);
         this._changeIconPosition();
     }
 

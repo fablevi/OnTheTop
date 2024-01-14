@@ -3,14 +3,14 @@
   <schema id="org.gnome.shell.extensions.on-the-top" path="/org/gnome/shell/extensions/on-the-top/">
     <key name="positions" type="s">
       <choices>
-        <choice value="right"/>
         <choice value="left"/>
+        <choice value="right"/>
       </choices> 
       <default>'right'</default>
       <summary>Position settings</summary>
       <description>This specifies where is the icon will be shown.</description>
       </key>
-      <key name="ranking" type="s">
+    <key name="ranking" type="s">
       <choices>
         <choice value="0"/>
         <choice value="1"/>
