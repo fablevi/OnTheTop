@@ -1,4 +1,7 @@
-![](./Screenshot.svg)
+<p align='center'>
+        <img src='./Screenshot.svg' width='300'>
+</p>
+
 
 # OnTheTop
 OnTheTop is a GNOME extension that aims to allow applications that don't have the 'Always On Top' feature in their default menus to stay on top of the other windows
