@@ -41,15 +41,18 @@ export default class OnTheTop extends Extension {
         const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-symbolic.svg`);
         this._belowIcon = this._createIcon(underAdwaitaIcon);
 
+        const noAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/noFocus-symbolic.svg`);
+        this._noFocusIcon = this._createIcon(noAdwaitaIcon);
+
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
         this._firstIconUpdate();
 
-         // Add the indicator to the panel
-         this._settingsJSON = this._importJSONFile();
-         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank , this._settingsJSON.position);
+        // Add the indicator to the panel
+        this._settingsJSON = this._importJSONFile();
+        Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank, this._settingsJSON.position);
     }
 
     disable() {
@@ -59,6 +62,9 @@ export default class OnTheTop extends Extension {
 
         this._belowIcon?.destroy();
         this._belowIcon = null;
+
+        this._noFocusIcon?.destroy();
+        this._noFocusIcon = null;
 
         global.window_manager.disconnectObject(this);
         Shell.WindowTracker.get_default().disconnectObject(this);
@@ -143,21 +149,30 @@ export default class OnTheTop extends Extension {
 
     _changeIcon() {
         try {
+            //this._indicator.visible = true;
+            this._indicator.reactive = true
             if (global.display.focus_window) {
-                this._indicator.visible = true;
+                //this._indicator.visible = true;
+                this._indicator.reactive = true
                 if (global.display.focus_window.is_above()) {
-                    this._indicator.remove_child(this._belowIcon);
+                    this._indicator.remove_child(this._indicator.first_child);
                     this._indicator.add_child(this._aboveIcon);
                 } else {
-                    this._indicator.remove_child(this._aboveIcon);
+                    this._indicator.remove_child(this._indicator.first_child);
                     this._indicator.add_child(this._belowIcon);
                 }
             } else {
-                this._indicator.visible = false;
+                //this._indicator.visible = false;
+                this._indicator.reactive = false
+                this._indicator.remove_child(this._indicator.first_child);
+                this._indicator.add_child(this._noFocusIcon);
             }
         }
         catch {
-            this._indicator.visible = false;
+            this._indicator.reactive = false
+            this._indicator.remove_child(this._indicator.first_child);
+            this._indicator.add_child(this._noFocusIcon);
+            //this._indicator.visible = false;
         }
     }
 
@@ -167,12 +182,15 @@ export default class OnTheTop extends Extension {
 
     //check if any opened window is_above()
     _firstIconUpdate() {
+        //replace with reactive
         if (global.display.focus_window) {
-            this._indicator.visible = true;
+            //this._indicator.visible = true;
+            this._indicator.reactive = true
             this._indicator.add_child(global.display.focus_window.is_above() ? this._aboveIcon : this._belowIcon);
             this._newFocusedWindow();
         } else {
-            this._indicator.visible = false;
+            this._indicator.reactive = false;
+            this._indicator.add_child(this._noFocusIcon);
         }
     }
 
@@ -186,7 +204,7 @@ export default class OnTheTop extends Extension {
 
     _changePosition() {
         console.log('_changePosition')
-        this._updateJSONFile(this.settings.get_string('positions'),this.settings.get_string('ranking'));
+        this._updateJSONFile(this.settings.get_string('positions'), this.settings.get_string('ranking'));
         //this._updateJSONFile(this.settings.get_string('positions'),2);
         this._changeIconPosition();
     }
