@@ -36,4 +36,5 @@ If the link is not available you can add it to the Shell:
 > Tested with Ubuntu 23.10 x86_64 
 
 Works with GNOME: 45!
+
 Note: Tested with DING extension, and it got some bugs. Try with vanilla GNOME, it will work fine :)
