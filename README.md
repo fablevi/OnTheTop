@@ -37,4 +37,4 @@ If the link is not available you can add it to the Shell:
 
 Works with GNOME: 45!
 
-Note: Tested with DING extension, and it got some bugs. Try with vanilla GNOME, it will work fine :)
+Note: Tested with [DING](https://gitlab.com/rastersoft/desktop-icons-ng) extension, and it got some bugs. Try with vanilla GNOME, it will work fine :)
