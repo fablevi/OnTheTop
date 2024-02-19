@@ -1,9 +1,11 @@
 import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
+import Clutter from 'gi://Clutter';
 
 export default class OnTheTop extends Extension {
     constructor(ext) {
@@ -15,6 +17,8 @@ export default class OnTheTop extends Extension {
         this.settings = this.getSettings();
         this.settings.connect("changed::positions", this._changePosition.bind(this))
         this.settings.connect("changed::ranking", this._changePosition.bind(this))
+
+        this._menu = null;
 
         this._handlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
@@ -29,6 +33,8 @@ export default class OnTheTop extends Extension {
         //Opened window listeners
         Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
         global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
+
+        this._addMenu()
     }
 
     _createButton() {
@@ -55,6 +61,23 @@ export default class OnTheTop extends Extension {
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank, this._settingsJSON.position);
     }
 
+    _addMenu() {
+        this._menu = new PopupMenu.PopupMenuItem('Settings', {
+
+        });
+        this._menu.connect('activate', () => {
+            try {
+                // this.#extension.openPreferences()
+                // Itt tudod elhelyezni a jobb gombhoz tartozó műveletet
+                //console.log("Jobb gombra kattintva - Menü aktiválva");
+                this.openPreferences();
+            } catch (e) {
+                console.log('error', e);
+            }
+        });
+        this._indicator.menu.addMenuItem(this._menu);
+    }
+
     disable() {
         this._handlerId = null;
         this._aboveIcon?.destroy();
@@ -74,6 +97,9 @@ export default class OnTheTop extends Extension {
 
         this._settingsJSON = null;
         this._settings = null;
+
+        this._menu?.destroy();
+        this._menu = null;
     }
 
     _importJSONFile() {
@@ -150,10 +176,10 @@ export default class OnTheTop extends Extension {
     _changeIcon() {
         try {
             //this._indicator.visible = true;
-            this._indicator.reactive = true
+            //this._indicator.reactive = true
             if (global.display.focus_window) {
                 //this._indicator.visible = true;
-                this._indicator.reactive = true
+                //this._indicator.reactive = true
                 if (global.display.focus_window.is_above()) {
                     this._indicator.remove_child(this._indicator.first_child);
                     this._indicator.add_child(this._aboveIcon);
@@ -163,21 +189,28 @@ export default class OnTheTop extends Extension {
                 }
             } else {
                 //this._indicator.visible = false;
-                this._indicator.reactive = false
+                //this._indicator.reactive = false
                 this._indicator.remove_child(this._indicator.first_child);
                 this._indicator.add_child(this._noFocusIcon);
             }
         }
         catch {
-            this._indicator.reactive = false
+            //this._indicator.reactive = false
             this._indicator.remove_child(this._indicator.first_child);
             this._indicator.add_child(this._noFocusIcon);
             //this._indicator.visible = false;
         }
     }
 
-    _buttonClicked() {
-        global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
+    _buttonClicked(actor, event) {
+        if (event.get_button() === Clutter.BUTTON_PRIMARY) {
+            this._indicator.menu.toggle();
+            if (global.display.focus_window) {
+                global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
+            }
+        } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
+            //console.log('Jobb egérgomb lenyomva');
+        }
     }
 
     //check if any opened window is_above()
@@ -185,11 +218,11 @@ export default class OnTheTop extends Extension {
         //replace with reactive
         if (global.display.focus_window) {
             //this._indicator.visible = true;
-            this._indicator.reactive = true
+            //this._indicator.reactive = true
             this._indicator.add_child(global.display.focus_window.is_above() ? this._aboveIcon : this._belowIcon);
             this._newFocusedWindow();
         } else {
-            this._indicator.reactive = false;
+            //this._indicator.reactive = false;
             this._indicator.add_child(this._noFocusIcon);
         }
     }
