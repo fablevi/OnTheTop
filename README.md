@@ -7,9 +7,7 @@
 OnTheTop is a GNOME extension that aims to allow applications that don't have the 'Always On Top' feature in their default menus to stay on top of the other windows
 
 ## Solution 1
-To add the extension to the GNOME Shell, you can do so at this link: 
-
-[https://extensions.gnome.org/extension/6571/on-the-top/](https://extensions.gnome.org/extension/6571/on-the-top/)
+To add the extension to the GNOME Shell, you can do so at this link: [GNOME extension](https://extensions.gnome.org/extension/6571/on-the-top/)
 
 ## Solution 2
 
