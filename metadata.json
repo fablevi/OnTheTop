@@ -4,7 +4,8 @@
   "uuid": "OnTheTop@fablevi.github.io",
   "settings-schema": "org.gnome.shell.extensions.on-the-top",
   "shell-version": [
-    "45"
+    "45",
+    "46"
   ],
   "url":"https://github.com/fablevi/OnTheTop",
   "extension-id": "OnTheTop",
