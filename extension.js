@@ -33,8 +33,6 @@ export default class OnTheTop extends Extension {
         //Opened window listeners
         Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
         global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
-
-        this._addMenu()
     }
 
     _createButton() {
@@ -59,6 +57,8 @@ export default class OnTheTop extends Extension {
         // Add the indicator to the panel
         this._settingsJSON = this._importJSONFile();
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank, this._settingsJSON.position);
+
+        this._addMenu()
     }
 
     _addMenu() {
