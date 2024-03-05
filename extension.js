@@ -17,6 +17,7 @@ export default class OnTheTop extends Extension {
         this.settings = this.getSettings();
         this.settings.connect("changed::positions", this._changePosition.bind(this))
         this.settings.connect("changed::ranking", this._changePosition.bind(this))
+        this.settings.connect("changed::stickiness", this._changePosition.bind(this))
 
         this._menu = null;
 
@@ -123,7 +124,7 @@ export default class OnTheTop extends Extension {
     }
 
     //not used right now
-    _updateJSONFile(newPosition, newRank) {
+    _updateJSONFile(newPosition, newRank, newSticky) {
         let settingsJSONpath = `${this.path}/settings.json`
         try {
             let file = Gio.File.new_for_path(settingsJSONpath);
@@ -135,6 +136,7 @@ export default class OnTheTop extends Extension {
                 // Frissítsd a "position" kulcs értékét az új pozícióval
                 json.position = newPosition;
                 json.rank = newRank;
+                json.sticky = newSticky;
 
                 // JSON objektumot szöveggé alakítsuk
                 let updatedContent = JSON.stringify(json, null, 4);
@@ -238,8 +240,8 @@ export default class OnTheTop extends Extension {
     }
 
     _changePosition() {
-        console.log('_changePosition', this.settings.get_string('positions'), this.settings.get_string('ranking'));
-        this._updateJSONFile(this.settings.get_string('positions'), this.settings.get_string('ranking'));
+        console.log('_changePosition', this.settings.get_string('positions'), this.settings.get_string('ranking'), this.settings.get_string('stickiness'));
+        this._updateJSONFile(this.settings.get_string('positions'), this.settings.get_string('ranking'), this.settings.get_string('stickiness'));
         //this._updateJSONFile(this.settings.get_string('positions'),2);
         this._changeIconPosition();
     }

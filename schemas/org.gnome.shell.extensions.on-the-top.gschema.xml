@@ -27,5 +27,14 @@
       <summary>Ranking settings</summary>
       <description>This specifies where is the icon will be shown.</description>
       </key>
+      <key name="stickiness" type="s">
+      <choices>
+        <choice value="true"/>
+        <choice value="false"/>
+      </choices> 
+      <default>'false'</default>
+      <summary>Position settings</summary>
+      <description>This specifies where is the icon will be shown.</description>
+      </key>
   </schema>
 </schemalist>

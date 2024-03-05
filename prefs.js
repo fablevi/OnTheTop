@@ -14,7 +14,9 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
 
         let comboRowPositions = builder.get_object('positions'); 
         let comboRowRanks = builder.get_object('ranking');
+        let comboRowSticky = builder.get_object('stickiness');
 
+        //set the default value
         if(json.position == 'right'){
             comboRowPositions.set_selected(1);
         }else{
@@ -23,12 +25,23 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
 
         comboRowRanks.set_selected(json.rank);
 
+        if(json.sticky == "false"){
+            comboRowSticky.set_selected(1);
+        }else{
+            comboRowSticky.set_selected(0);
+        }
+
+        //add listeners
         comboRowPositions.connect("notify::selected-item",()=>{
             this._comboRowPositionsChange(comboRowPositions, settings)
         })
 
         comboRowRanks.connect("notify::selected-item",()=>{
             this._comboRowRanksChange(comboRowRanks, settings)
+        })
+
+        comboRowSticky.connect("notify::selected-item",()=>{
+            this._comboRowStickinessChange(comboRowSticky, settings)
         })
 
         window.add(builder.get_object('settings_page'));
@@ -51,10 +64,10 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
         }
     }
 
-    _comboRowPositionsChange(pos, settings){
-        console.log('_comboRowPositionsChange',pos.selected)
+    _comboRowPositionsChange(comboRow, settings){
+        console.log('_comboRowPositionsChange',comboRow.selected)
         try{
-            switch(pos.get_selected()){
+            switch(comboRow.get_selected()){
                 case 0:
                     settings.set_string("positions","left");
                     break;
@@ -71,7 +84,25 @@ export default class OnTheTopPreferences extends ExtensionPreferences {
         
     }
 
-    _comboRowRanksChange(rank, settings){
-        settings.set_string("ranking",rank.selected.toString());
+    _comboRowRanksChange(comboRow, settings){
+        settings.set_string("ranking",comboRow.selected.toString());
+    }
+
+    _comboRowStickinessChange(comboRow, settings){
+        try{
+            switch(comboRow.get_selected()){
+                case 0:
+                    settings.set_string("stickiness","true");
+                    break;
+                case 1:
+                    settings.set_string("stickiness","false");
+                    break;
+                default:
+                    console.log("nem mentek!!")
+                    break;
+            }
+        }catch(error){
+            console.log('error',error);
+        }
     }
 }
