@@ -48,5 +48,25 @@
         </child>
       </object>
     </child>
+    <child>
+      <object class="AdwPreferencesGroup">
+        <property name="description">Configure extra settings</property>
+        <property name="title">Settings</property>
+        <child>
+          <object class="AdwComboRow" id="stickiness">
+            <property name="model">
+              <object class="GtkStringList">
+                <items>
+                  <item>True</item>
+                  <item>False</item>
+                </items>
+              </object>
+            </property>
+            <property name="subtitle">Set focused window always visible on workspace</property>
+            <property name="title">Stickiness</property>
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>
