@@ -29,6 +29,9 @@ export default class OnTheTop extends Extension {
 
         this._aboveIcon = null;
         this._belowIcon = null;
+        this._noFocusIcon = null;
+        this._aboveStickyIcon = null;
+        this._belowStickyIcon = null;
 
         this._createButton()
 
@@ -41,14 +44,20 @@ export default class OnTheTop extends Extension {
         //icon size
         this._iconSize = 16;
 
-        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/pinned-sticky-symbolic.svg`);
+        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/pinned-symbolic.svg`);
         this._aboveIcon = this._createIcon(aboveAdwaitaIcon);
 
-        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-sticky-symbolic.svg`);
+        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-symbolic.svg`);
         this._belowIcon = this._createIcon(underAdwaitaIcon);
 
         const noAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/noFocus-symbolic.svg`);
         this._noFocusIcon = this._createIcon(noAdwaitaIcon);
+
+        const aboveAdwaitaStickyIcon = Gio.icon_new_for_string(`${this.path}/icons/pinned-sticky-symbolic.svg`);
+        this._aboveStickyIcon = this._createIcon(aboveAdwaitaStickyIcon);
+
+        const underAdwaitaStickyIcon = Gio.icon_new_for_string(`${this.path}/icons/under-sticky-symbolic.svg`);
+        this._belowStickyIcon = this._createIcon(underAdwaitaStickyIcon);
 
         // Create a panel button
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
@@ -62,7 +71,7 @@ export default class OnTheTop extends Extension {
         this._addMenu();
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank, this._settingsJSON.position);
 
-        
+
     }
 
     _addMenu() {
@@ -71,9 +80,6 @@ export default class OnTheTop extends Extension {
         });
         this._menu.connect('activate', () => {
             try {
-                // this.#extension.openPreferences()
-                // Itt tudod elhelyezni a jobb gombhoz tartozó műveletet
-                //console.log("Jobb gombra kattintva - Menü aktiválva");
                 this.openPreferences();
             } catch (e) {
                 console.log('error', e);
@@ -85,6 +91,7 @@ export default class OnTheTop extends Extension {
     disable() {
         this._handlerId = null;
         this._stickhandlerId = null;
+        this._oldGlobalDisplayFocusWindow = null;
 
         this._aboveIcon?.destroy();
         this._aboveIcon = null;
@@ -94,6 +101,12 @@ export default class OnTheTop extends Extension {
 
         this._noFocusIcon?.destroy();
         this._noFocusIcon = null;
+
+        this._aboveStickyIcon?.destroy();
+        this._aboveStickyIcon = null;
+
+        this._belowStickyIcon?.destroy();
+        this._belowStickyIcon = null;
 
         global.window_manager.disconnectObject(this);
         Shell.WindowTracker.get_default().disconnectObject(this);
@@ -164,39 +177,42 @@ export default class OnTheTop extends Extension {
         this._changeIcon();
     }
 
-    _isAboveFunction() {
+    _isNotified() {
         this._changeIcon();
     }
 
     _isWindowChange_Handler() {
         if (this._oldGlobalDisplayFocusWindow) {
             this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
+            this._oldGlobalDisplayFocusWindow.disconnect(this._stickhandlerId);
         }
         this._newFocusedWindow();
     }
 
     _newFocusedWindow() {
         this._oldGlobalDisplayFocusWindow = global.display.focus_window ? global.display.focus_window : null;
-        this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)) : 0;
+        this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isNotified.bind(this)) : 0;
+        this._stickhandlerId = global.display.focus_window ? global.display.focus_window.connect('notify::on-all-workspaces', this._isNotified.bind(this)) : 0;
     }
 
     _changeIcon() {
+        console.log("this.settings.get_string('stickiness'): ", this.settings.get_string('stickiness'))
         try {
-            //this._indicator.visible = true;
-            //this._indicator.reactive = true
             if (global.display.focus_window) {
-                //this._indicator.visible = true;
-                //this._indicator.reactive = true
-                if (global.display.focus_window.is_above()) {
+                if (global.display.focus_window.is_above() && global.display.focus_window.is_on_all_workspaces()) {
                     this._indicator.remove_child(this._indicator.first_child);
-                    this._indicator.add_child(this._aboveIcon);
+                    this._indicator.add_child(this._aboveStickyIcon);
+                } else if (global.display.focus_window.is_on_all_workspaces()) {
+                    this._indicator.remove_child(this._indicator.first_child);
+                    this._indicator.add_child(this._belowStickyIcon);
+                } else if (global.display.focus_window.is_above()) {
+                    this._indicator.remove_child(this._indicator.first_child);
+                    this._indicator.add_child(this._aboveIcon)
                 } else {
                     this._indicator.remove_child(this._indicator.first_child);
                     this._indicator.add_child(this._belowIcon);
                 }
             } else {
-                //this._indicator.visible = false;
-                //this._indicator.reactive = false
                 this._indicator.remove_child(this._indicator.first_child);
                 this._indicator.add_child(this._noFocusIcon);
             }
@@ -214,6 +230,15 @@ export default class OnTheTop extends Extension {
             this._indicator.menu.toggle();
             if (global.display.focus_window) {
                 global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
+                if (this.settings.get_string('stickiness') != "false") {
+                    if (global.display.focus_window.is_on_all_workspaces() && !global.display.focus_window.is_above()) {
+                        global.display.focus_window.unstick()
+                    } else {
+                        global.display.focus_window.stick();
+                    }
+                } else {
+                    global.display.focus_window.is_on_all_workspaces() ? global.display.focus_window.unstick() : null;
+                }
             }
         } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
             //console.log('Jobb egérgomb lenyomva');
@@ -259,6 +284,12 @@ export default class OnTheTop extends Extension {
 
         this._indicator?.destroy();
         this._indicator = null;
+
+        this._aboveStickyIcon?.destroy();
+        this._aboveStickyIcon = null;
+
+        this._belowStickyIcon?.destroy();
+        this._belowStickyIcon = null;
 
         this._createButton();
     }
