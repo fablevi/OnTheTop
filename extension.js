@@ -22,6 +22,7 @@ export default class OnTheTop extends Extension {
         this._menu = null;
 
         this._handlerId = null;
+        this._stickhandlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
 
         this._indicator = null;
@@ -40,10 +41,10 @@ export default class OnTheTop extends Extension {
         //icon size
         this._iconSize = 16;
 
-        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/pinned-symbolic.svg`);
+        const aboveAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/pinned-sticky-symbolic.svg`);
         this._aboveIcon = this._createIcon(aboveAdwaitaIcon);
 
-        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-symbolic.svg`);
+        const underAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/under-sticky-symbolic.svg`);
         this._belowIcon = this._createIcon(underAdwaitaIcon);
 
         const noAdwaitaIcon = Gio.icon_new_for_string(`${this.path}/icons/noFocus-symbolic.svg`);
@@ -83,6 +84,8 @@ export default class OnTheTop extends Extension {
 
     disable() {
         this._handlerId = null;
+        this._stickhandlerId = null;
+
         this._aboveIcon?.destroy();
         this._aboveIcon = null;
 
