@@ -38,6 +38,8 @@ export default class OnTheTop extends Extension {
         //Opened window listeners
         Shell.WindowTracker.get_default().connectObject('notify::focus-app', this._focusAppChanged.bind(this), this);
         global.window_manager.connectObject('switch-workspace', this._focusAppChanged.bind(this), this);
+
+        this.settings.set_string("stickiness", this._settingsJSON.sticky);
     }
 
     _createButton() {
@@ -230,18 +232,19 @@ export default class OnTheTop extends Extension {
             this._indicator.menu.toggle();
             if (global.display.focus_window) {
                 global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
+            }
+        } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
+            //console.log('Jobb egérgomb lenyomva');
+        } else if (event.get_button() === Clutter.BUTTON_MIDDLE) {
+            //handle stickiness
+            this._indicator.menu.toggle();
+            if (global.display.focus_window) {
                 if (this.settings.get_string('stickiness') != "false") {
-                    if (global.display.focus_window.is_on_all_workspaces() && !global.display.focus_window.is_above()) {
-                        global.display.focus_window.unstick()
-                    } else {
-                        global.display.focus_window.stick();
-                    }
+                    global.display.focus_window.is_on_all_workspaces() ? global.display.focus_window.unstick() : global.display.focus_window.stick();
                 } else {
                     global.display.focus_window.is_on_all_workspaces() ? global.display.focus_window.unstick() : null;
                 }
             }
-        } else if (event.get_button() === Clutter.BUTTON_SECONDARY) {
-            //console.log('Jobb egérgomb lenyomva');
         }
     }
 
