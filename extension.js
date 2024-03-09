@@ -248,16 +248,19 @@ export default class OnTheTop extends Extension {
         }
     }
 
-    //check if any opened window is_above()
+    //check if any opened window is_above() and is_on_all_workspaces()
     _firstIconUpdate() {
-        //replace with reactive
         if (global.display.focus_window) {
-            //this._indicator.visible = true;
-            //this._indicator.reactive = true
-            this._indicator.add_child(global.display.focus_window.is_above() ? this._aboveIcon : this._belowIcon);
-            this._newFocusedWindow();
+            if (global.display.focus_window.is_above() && global.display.focus_window.is_on_all_workspaces()) {
+                this._indicator.add_child(this._aboveStickyIcon);
+            } else if (global.display.focus_window.is_on_all_workspaces()) {
+                this._indicator.add_child(this._belowStickyIcon);
+            } else if (global.display.focus_window.is_above()) {
+                this._indicator.add_child(this._aboveIcon)
+            } else {
+                this._indicator.add_child(this._belowIcon);
+            }
         } else {
-            //this._indicator.reactive = false;
             this._indicator.add_child(this._noFocusIcon);
         }
     }

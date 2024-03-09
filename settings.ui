@@ -62,7 +62,7 @@
                 </items>
               </object>
             </property>
-            <property name="subtitle">Set focused window always visible on workspace</property>
+            <property name="subtitle">Set focused window always visible on workspace, works with middle click</property>
             <property name="title">Stickiness</property>
           </object>
         </child>
