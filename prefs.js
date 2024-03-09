@@ -5,6 +5,7 @@ import {ExtensionPreferences,gettext as _ } from 'resource:///org/gnome/Shell/Ex
 export default class OnTheTopPreferences extends ExtensionPreferences {
 //export default class OnTheTopPreferences{
     fillPreferencesWindow(window) {
+        window.set_default_size(500-122, 600-122);
         let settings = this.getSettings();
         let json = this._importJSONFile();
 
