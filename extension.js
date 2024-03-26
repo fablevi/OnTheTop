@@ -261,6 +261,7 @@ export default class OnTheTop extends Extension {
                 this._indicator.add_child(this._belowIcon);
             }
         } else {
+            //a.replace('return ','') == r(38).title
             this._indicator.add_child(this._noFocusIcon);
         }
     }
