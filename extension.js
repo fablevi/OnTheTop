@@ -91,6 +91,9 @@ export default class OnTheTop extends Extension {
     }
 
     disable() {
+        this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
+        this._oldGlobalDisplayFocusWindow.disconnect(this._stickhandlerId);
+
         this._handlerId = null;
         this._stickhandlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
@@ -200,7 +203,7 @@ export default class OnTheTop extends Extension {
     _changeIcon() {
         console.log("this.settings.get_string('stickiness'): ", this.settings.get_string('stickiness'))
         try {
-            if (global.display.focus_window) {
+            if (global.display.focus_window && "@!0,0;BDHF" != global.display.focus_window.title /*DING EXTENSION*/) {
                 if (global.display.focus_window.is_above() && global.display.focus_window.is_on_all_workspaces()) {
                     this._indicator.remove_child(this._indicator.first_child);
                     this._indicator.add_child(this._aboveStickyIcon);
@@ -215,15 +218,14 @@ export default class OnTheTop extends Extension {
                     this._indicator.add_child(this._belowIcon);
                 }
             } else {
+                //a.replace('return ','') == r(38).title
                 this._indicator.remove_child(this._indicator.first_child);
                 this._indicator.add_child(this._noFocusIcon);
             }
         }
         catch {
-            //this._indicator.reactive = false
             this._indicator.remove_child(this._indicator.first_child);
             this._indicator.add_child(this._noFocusIcon);
-            //this._indicator.visible = false;
         }
     }
 
