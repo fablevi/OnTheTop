@@ -4,7 +4,9 @@
 
 
 # OnTheTop
-OnTheTop is a GNOME extension that aims to allow applications that don't have the 'Always On Top' feature in their default menus to stay on top of the other windows
+OnTheTop is a GNOME extension that aims to allow applications that don't have the 'Always On Top' feature in their default menus to stay on top of the other windows.
+A button on the top panel appear, and with left click yopu can activate this feature. With left click, you can open settings window quicker.
+I implemented to stick between virtual desktop. This activates when you click the button with middle click. This can be shut down in the settigns.
 
 ## Solution 1
 To add the extension to the GNOME Shell, you can do so at this link: [GNOME extension](https://extensions.gnome.org/extension/6571/on-the-top/)
