@@ -72,8 +72,6 @@ export default class OnTheTop extends Extension {
         console.log(JSON.stringify(this._settingsJSON));
         this._addMenu();
         Main.panel.addToStatusArea(this.uuid, this._indicator, this._settingsJSON.rank, this._settingsJSON.position);
-
-
     }
 
     _addMenu() {
@@ -91,9 +89,10 @@ export default class OnTheTop extends Extension {
     }
 
     disable() {
-        this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
-        this._oldGlobalDisplayFocusWindow.disconnect(this._stickhandlerId);
-
+        if(this._oldGlobalDisplayFocusWindow){
+            this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
+            this._oldGlobalDisplayFocusWindow.disconnect(this._stickhandlerId);
+        }
         this._handlerId = null;
         this._stickhandlerId = null;
         this._oldGlobalDisplayFocusWindow = null;
